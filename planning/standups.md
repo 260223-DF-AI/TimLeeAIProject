@@ -1,5 +1,12 @@
 # April 6
 ## Tim:
-**will do:** post request fastapi skeleton
+post request fastapi skeleton
 ## Lee:
-**will do:** db creation/connection & import old logger code
+db creation/connection & import old logger code
+
+
+# April 7
+## Tim
+LLM research (#15) and potentially configure account (#19)
+## Lee
+set up issues, potentially db schema design (#10)
