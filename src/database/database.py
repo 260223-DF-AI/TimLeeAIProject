@@ -1,6 +1,6 @@
 """Handles database creation, connection, writing, and reading.
 
-Instructions for current implementation:
+You'll need to manually do this before database functions will work:
 1. Create a JSON file in src called "keys.json"
 2. add the following content, replacing the second password with 
     your local postgres password:
