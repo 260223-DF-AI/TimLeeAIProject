@@ -10,7 +10,7 @@ This project uses the [statefarm distracted driver image database](https://www.k
 How the app works:
 1. post request triggers a series of 10 images to be sent to the CV model, passed through 1 at a time
 2. CV model classifies image into categories:
-    - c0- safe driving
+    - c0- safe driving 
     - c1- phone usage
     - c2- radio
     - c3- drinking
@@ -18,4 +18,9 @@ How the app works:
     - c5- hair/makeup
     - c6- turned to passenger
 3. LLM gets confidence results from CV model, decides whether to immediately alert or not
+    - c0- no action
+    - c1- offer to call/text 
+    - c2- offer control assistance
+    - c3-c5- offer rest stop
+    - c6- eyes on road/music controls
 4. after all images have been passed, LLM generates a report on incidents/safety of the trip
