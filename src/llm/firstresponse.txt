@@ -1,0 +1,62 @@
+Summary
+- 10 observations from a single driver: 7 safe-driving (c0), 1 radio adjustment
+(c2, 90%), 1 turned to passenger (c6, 98%), 1 hair/makeup (c5, 98%).
+- Overall: mostly safe, but three high-confidence distraction events that need i
+mmediate mitigation.
+
+Immediate recommended actions (prioritized)
+1. Hair/makeup (c5, 98%) — HIGH priority
+   - Risk: grooming greatly reduces attention and increases crash risk.
+   - Action: Offer a rest stop / pull-over prompt now.
+     Suggested system prompt to driver: “High distraction detected: grooming. Wo
+uld you like directions to the nearest safe place to stop?”
+   - If driver approves: provide nearest safe stop and pause notifications/music
+.
+
+2. Turned to passenger (c6, 98%) — HIGH priority
+   - Risk: eyes off road; conversation/interaction increases crash risk.
+   - Action: Prompt driver to face forward and reduce in-cabin distraction; offe
+r music controls instead of physical interaction.
+     Suggested system prompt: “Please keep eyes on the road. Would you like me t
+o pause or lower the music, or enable voice controls for passenger conversation?
+”
+   - If driver prefers, reduce audio volume or enable voice-activated controls s
+o the passenger can control media without driver looking away.
+
+3. Radio interaction (c2, 90%) — MEDIUM priority
+   - Risk: adjusting radio distracts from driving.
+   - Action: Offer control assistance: switch to voice control, use steering-whe
+el controls, or let system change station/volume.
+     Suggested system prompt: “I detected radio interaction. Would you like me t
+o change the station, lower the volume, or enable voice control?”
+
+In-car interventions (if the driver has configured/consented)
+- If approved, the system can:
+  - Send the “pull over” navigation to the driver’s map app.
+  - Reduce or pause audio, change station, or switch to voice-controlled media.
+  - Mute non-urgent notifications and enable Do Not Disturb Driving mode.
+  - Send an auto-message to a paired passenger or contact (only if configured an
+d permitted).
+
+Behavioral and long-term recommendations
+- Avoid grooming in the car: do makeup/hair before leaving or after a designated
+ stop.
+- Pre-set media and navigation before driving; use voice activation and steering
+-wheel media controls.
+- Use Do Not Disturb Driving or “Driving Focus” to suppress distracting notifica
+tions.
+- If passengers are present, ask them to handle directions, phone, or media adju
+stments.
+- Take regular breaks on longer trips (rough guideline: every 2 hours or when fe
+eling distracted/tired).
+
+Confidence and monitoring
+- The grooming and turned-to-passenger detections are high confidence (98%). Rad
+io case is high confidence (90%). Continue monitoring; if repeated high-confiden
+ce distractions occur, escalate prompts and encourage stopping.
+
+Closing
+- Primary immediate actions: prompt to pull over for grooming, request driver to
+ face the road and offer to manage music, and offer radio voice-control assistan
+ce. If you want, I can send the pull-over navigation or pause the music now — do
+ you want me to proceed?
