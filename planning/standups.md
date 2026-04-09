@@ -10,3 +10,14 @@ db creation/connection & import old logger code
 LLM research (#15) and potentially configure account (#19)
 ## Lee
 set up issues, potentially db schema design (#10)
+
+# April 8
+## Tim
+## Lee
+finish schema design (#10), table creation (#11), write functions (#12)
+
+# April 9
+## Tim
+connect to aws with python, maybe research permissions
+## Lee
+finish data processing 
