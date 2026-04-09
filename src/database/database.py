@@ -21,10 +21,10 @@ from src.utils import logger
 # constants
 DB_NAME = "driver_image_classification"
 
-logger = logger.setup_logger(__name__, "error", console=False)
+logger = logger.setup_logger(__name__, "debug", console=False)
 
 
-def connect_db() -> tuple[psycopg2.extensions.connection, psycopg2.extensions.cursor]:
+def connect_db(db: str = DB_NAME) -> tuple[psycopg2.extensions.connection, psycopg2.extensions.cursor]:
     """Do not call externally, is automatically called by other functions.
     Sets up psycopg2 connection and returns it."""
 
@@ -46,7 +46,7 @@ def connect_db() -> tuple[psycopg2.extensions.connection, psycopg2.extensions.cu
         conn = psycopg2.connect(
             host="localhost",
             port=5432,
-            database="postgres",
+            database=f"{db}",
             user="postgres",
             password=user_password
         )
@@ -60,26 +60,26 @@ def connect_db() -> tuple[psycopg2.extensions.connection, psycopg2.extensions.cu
     return conn, cursor
     
 
-def create_db():
+def create_db(db: str = DB_NAME) -> None:
     """Creates the database."""
     logger.debug("Attempting db creation...")
 
     conn, cursor = connect_db()
     # Create the database
     try:
-        cursor.execute(f"CREATE DATABASE {DB_NAME};")
+        cursor.execute(f"CREATE DATABASE {db};")
     except psycopg2.errors.DuplicateDatabase as e:
-        logger.warning(f"Database {DB_NAME} already exists.")
+        logger.warning(f"Database {db} already exists.")
     except Exception as e:
         logger.error(f"Error type {type(e)}: {e}")
     else:
-        logger.info(f"Successfully created database {DB_NAME}.")
+        logger.info(f"Successfully created database {db}.")
     
     conn.close()
-    logger.debug(f"Finished attempting to create database {DB_NAME}.")
+    logger.debug(f"Finished attempting to create database {db}.")
 
 
-def delete_db():
+def delete_db(db: str = DB_NAME) -> None:
     """Deletes the database."""
 
     logger.debug("Attempting db deletion...")
@@ -87,19 +87,38 @@ def delete_db():
     conn, cursor = connect_db()
     # Delete the database
     try:
-        cursor.execute(f"DROP DATABASE {DB_NAME};")
+        cursor.execute(f"DROP DATABASE {db};")
     except psycopg2.errors.ObjectInUse as e:
         logger.error(f"Couldn't delete database since it's currently in use. Manually close the connection on your end and try again.")
     except Exception as e:
         logger.error(f"Error type {type(e)}: {e}")
     else:
-        logger.info(f"Successfully deleted database {DB_NAME}.")
+        logger.info(f"Successfully deleted database {db}.")
     
     conn.close()
-    logger.debug(f"Finished attempting to delete database {DB_NAME}.")
+    logger.debug(f"Finished attempting to delete database {db}.")
+
+def create_tables(db: str = DB_NAME) -> None:
+    """Creates the tables from schema.sql file, more info about what tables/columns represent
+    can be found in planning/about_database.md"""
+    
+    logger.debug("Attempting table creation...")
+
+    conn, cursor = connect_db()
+    # Create the tables
+    try:
+        cursor.execute(open("src/database/schema.sql", "r").read())
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully created tables.")
+    
+    conn.close()
+    logger.debug("Finished attempting to create tables.")
     
 
 # for testing purposes
 if __name__ == "__main__":
-    create_db()
-    delete_db()
+    create_db(db="postgres")
+    create_tables()
+    # delete_db()

@@ -7,13 +7,20 @@ Contains some very long text fields, but that's okay since this is very small sc
 Information about the training images and their correct classification, almost directly corresponds to driver_imgs_list.csv from the original dataset with the addition of an image_id
 - PK image_id (int)- autoincrementing identifier
 - image_name (varchar 50)- name of the image file
-- class (int)- correct class of the image
+- category (enum)- correct class of the image
 - FK driver_id (int)- id of driver in image
+
+## drivers
+Some made up information about each driver
+- PK driver_id (int)- autoincrementing identifier
+- first_name (VARCHAR 50)- first name of the driver
+- last_name (VARCHAR 100)- last name of the driver
+- driver_age (int)
 
 ## http 
 Log of http requests made
 - PK http_id (int)- autoincremementing identifier
-- time_http_received (datetime)- time request received
+- time_received (datetime)- time request received
 - potentially add arguments column
 
 ## cv_results
@@ -29,4 +36,4 @@ Log of http requests made
 - time_received (datetime) - timestamp response received from the LLM
 - prompt_type (enum 'image', 'summary', 'other')- type of prompt- is it one of the 10 images, asking for the summary, or doing something else (probably for testing)?
 - prompt_body (text)- body of the prompt that was sent to the llm through the code
-- result (text)- entire response recieved from the LLM
+- response_body (text)- entire response recieved from the LLM
