@@ -115,7 +115,7 @@ def create_tables(db: str = DB_NAME) -> None:
     logger.debug("Finished attempting to create tables.")
 
 def add_images():
-    """Downloads the dataset from kaggle to the local system. Then adds images to images table."""
+    """"""
 
     logger.debug("Beginning image download/database insertion...")
     conn, cursor = connect_db()
