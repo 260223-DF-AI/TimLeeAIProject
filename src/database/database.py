@@ -62,8 +62,8 @@ def connect_db(db: str = DB_NAME) -> tuple[psycopg2.extensions.connection, psyco
 
 def create_db(db: str = DB_NAME) -> None:
     """Creates the database."""
-    logger.debug("Attempting db creation...")
 
+    logger.debug("Attempting db creation...")
     conn, cursor = connect_db()
     # Create the database
     try:
@@ -83,7 +83,6 @@ def delete_db(db: str = DB_NAME) -> None:
     """Deletes the database."""
 
     logger.debug("Attempting db deletion...")
-
     conn, cursor = connect_db()
     # Delete the database
     try:
@@ -103,7 +102,6 @@ def create_tables(db: str = DB_NAME) -> None:
     can be found in planning/about_database.md"""
     
     logger.debug("Attempting table creation...")
-
     conn, cursor = connect_db()
     # Create the tables
     try:
@@ -115,10 +113,19 @@ def create_tables(db: str = DB_NAME) -> None:
     
     conn.close()
     logger.debug("Finished attempting to create tables.")
-    
+
+def add_images():
+    """Downloads the dataset from kaggle to the local system. Then adds images to images table."""
+
+    logger.debug("Beginning image download/database insertion...")
+    conn, cursor = connect_db()
+
+
+    pass
 
 # for testing purposes
 if __name__ == "__main__":
     create_db(db="postgres")
     create_tables()
+    add_images()
     # delete_db()
