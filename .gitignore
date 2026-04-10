@@ -1,6 +1,7 @@
 # stuff we added to .gitignore
 app.log
 keys.json
+data/
 
 # github .gitignore template stuff below vvvvv
 # Byte-compiled / optimized / DLL files
