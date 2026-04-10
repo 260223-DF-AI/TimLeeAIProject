@@ -6,7 +6,9 @@ You'll need to manually download the dataset from kaggle, follow these direction
 3. Click "Download All" from the right hand side, all the way down
 4. Put the dataset folder in src/data. create src/data if it doesn't exist
 
-The script here will do the unzipping/processing for you so just drop the zip file in here.
+The script here will do the unzipping/processing for you so just drop the zip file in the data folder.
+Run data_processor.py as main once, it will take about 3 minutes, but then the data is partitioned
+and ready to use.
 """
 
 # main imports
