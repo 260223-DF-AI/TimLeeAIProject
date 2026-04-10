@@ -1,4 +1,5 @@
-"""Processes all the data.
+"""Processes all the data & adds it to the dataset using functions in database_core.py.
+Combines core db logic & dataset processing.
 
 You'll need to manually download the dataset from kaggle, follow these directions:
 1. Visit https://www.kaggle.com/competitions/state-farm-distracted-driver-detection/data
@@ -7,18 +8,27 @@ You'll need to manually download the dataset from kaggle, follow these direction
 4. Put the dataset folder in src/data. create src/data if it doesn't exist
 
 The script here will do the unzipping/processing for you so just drop the zip file in the data folder.
-Run data_processor.py as main once, it will take about 3 minutes, but then the data is partitioned
-and ready to use.
+
+You will also need to add a .env file with your local postgres information:
+1. Ensure you have a .env file in src
+2. Write the connection string to it, replace password with your password:
+CS = "postgresql://postgres:PASSWORD@localhost:5432/driver_image_classification"
+
+After following both of these sets of instructions, run process_database.py once to have everything
+set up for model training. It will take several minutes.
 """
 
 # main imports
 import zipfile 
 import os
 import shutil
+import pandas as pd
+import sqlalchemy as sa
 
 # project imports
 from src.utils import logger
 from src.paths import DATA_ROOT
+from src.database import database_core as db_core
 
 # path constants
 IMGS = DATA_ROOT / "imgs"
@@ -62,10 +72,13 @@ def clear_folders_to_reprocess():
         logger.info("Successfully cleared out folders for reprocessing.")
     
 
-def process_dataset():
+def process_images():
     """Processes the dataset with these steps:
     1. Rename existing data/imgs/test folder to data/imgs/unlabeled
-    2. Partition existing train data into train/val/test.
+    2. Creates necessary folders
+    3. Partition existing train data into train/val/test
+        a. along the way, condenses c1-c4 into c1
+        b. also adds images to database
     """
 
     logger.debug("Processing dataset...")
@@ -89,6 +102,9 @@ def process_dataset():
         if not os.path.exists(TRAIN):
             raise FileNotFoundError
 
+        if os.path.exists(VAL) or os.path.exists(TEST) or os.path.exists(FUTURE_TRAIN):
+            raise FileExistsError
+
         os.makedirs(VAL)
         os.makedirs(TEST)
         os.makedirs(FUTURE_TRAIN)
@@ -99,7 +115,8 @@ def process_dataset():
             os.makedirs(f"{FUTURE_TRAIN}/c{i}")
 
     except FileExistsError:
-        logger.info("Val/test folders already exist. Skipping.")
+        logger.info("Val/test folders already exist. Assuming everything has already been partitioned & skipping rest of function.")
+        return None
     except FileNotFoundError:
         logger.error("Couldn't find train folder. Did you unzip the dataset first?")
     except Exception as e:
@@ -108,21 +125,19 @@ def process_dataset():
         logger.info("Successfully partitioned train data.")
 
     # create map for consolidating c1-c4 in the original database to one category, c1
-    category_map = {
-        "c0": "c0",
-        "c1": "c1", 
-        "c2": "c1",
-        "c3": "c1",
-        "c4": "c1",
-        "c5": "c2",
-        "c6": "c3",
-        "c7": "c4",
-        "c8": "c5",
-        "c9": "c6"
-    }
-
-    # take 1 of every 9 files for test/val
+    category_map = {"c0": "c0", "c1": "c1",  "c2": "c1",
+        "c3": "c1", "c4": "c1", "c5": "c2", "c6": "c3",
+        "c7": "c4", "c8": "c5", "c9": "c6"}
+    
+    # partition train & create df with image info
     try:
+        # initialize df from csv
+        image_df = pd.read_csv(DATA_ROOT / "driver_imgs_list.csv")
+        # rename df columns to schema columns
+        image_df = image_df.rename(columns={"img": "image_name", 
+                                            "classname": "image_class", 
+                                            "subject": "driver_id"})
+
         counter = 0
         # for each subfolder in train
         for category in os.listdir(TRAIN):
@@ -130,22 +145,50 @@ def process_dataset():
                 # map new categories, consolidating the old c1-c4
                 new_category = category_map[category]
 
-                # move 1/9 to val
+                # Validation partition
                 if counter % 9 == 0:
+                    # move 1/9 to val
                     os.rename(f"{TRAIN}/{category}/{image}", f"{VAL}/{new_category}/{image}")
-                # move 1/9 to test
+
+                    # configure df
+                    image_df.loc[image_df["image_name"] == image, "partition_loc"] = "val"
+
+                # Test partition
                 elif counter % 9 == 1:
+                    # move 1/9 to test
                     os.rename(f"{TRAIN}/{category}/{image}", f"{TEST}/{new_category}/{image}")
+
+                    # configure df
+                    image_df.loc[image_df["image_name"] == image, "partition_loc"] = "test"
+                    
                 # correctly categorize the rest & separate them to a new dir to prevent
                 # accidentally going over them again
                 else:
                     os.rename(f"{TRAIN}/{category}/{image}", f"{FUTURE_TRAIN}/{new_category}/{image}")
+
+                    # configure df
+                    image_df.loc[image_df["image_name"] == image, "partition_loc"] = "train"
                 counter += 1
             
     except Exception as e:
         logger.error(f"Error type {type(e)}: {e}, line {e.__traceback__.tb_lineno}")
     else: 
         logger.info("Successfully partitioned train data.")
+
+    # add image_df to db
+    try:
+        engine = db_core.get_engine()
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            image_df.to_sql("images", con=conn, if_exists="append", index=False)
+
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully added image info to database.")
+    finally:
+        engine.dispose()
 
     # clean up/rename
     try:
@@ -161,8 +204,37 @@ def process_dataset():
 
     logger.debug("Finished processing dataset.")
 
+def add_drivers():
+    logger.debug("Adding drivers...")
+
+    # currently just adds driver ids to the table and no other information
+    driver_id_list = ['p002', 'p012', 'p014', 'p015', 'p016', 'p021', 'p022', 'p024', 'p026',
+ 'p035', 'p039', 'p041', 'p042', 'p045', 'p047', 'p049', 'p050', 'p051',
+ 'p052', 'p056', 'p061', 'p064', 'p066', 'p072', 'p075', 'p081']
+    
+    try:
+        engine = db_core.get_engine()
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            for driver_id in driver_id_list:
+                conn.execute(sa.text(f"INSERT INTO drivers (driver_id) VALUES ('{driver_id}')"))
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully added drivers to database.")
+    finally:
+        engine.dispose()
+
+    logger.debug("Finished adding drivers.")
+
+
 # for testing purposes
 if __name__ == "__main__":
     clear_folders_to_reprocess()
     unzip_dataset()
-    process_dataset()
+    db_core.delete_db()
+    db_core.create_db()
+    db_core.create_tables()
+    add_drivers()
+    process_images()

@@ -1,21 +1,17 @@
-"""Handles database creation, connection, writing, and reading.
-
-You'll need to manually do this before database functions will work:
-1. Ensure you have a .env file in src
-2. Write the connection string to it, replace password with your password:
-CS = "postgresql://postgres:PASSWORD@localhost:5432/driver_image_classification"
+"""Handles database creation, connection, writing, and reading. Designed to be called 
+from process_database.py, not on its own.
 """
 
 # main imports
 import sqlalchemy as sa
-import psycopg2
 import pandas as pd
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 # project imports
 from src.utils import logger
-from src.paths import DATA_ROOT, SRC_ROOT
+from src.paths import SRC_ROOT
 
 # constants
 DB_NAME = "driver_image_classification"
@@ -122,32 +118,10 @@ def create_tables(db: str = DB_NAME) -> None:
         engine.dispose()
     logger.debug("Finished attempting to create tables.")
 
-def add_images(db: str = DB_NAME) -> None:
-    """Adds images to the images table in the database. 
-    Assumes images are already downloaded and processed, see data_processor.py."""
-
-    logger.debug("Adding images to database...")
-    engine = get_engine(db)
-
-    # read driver_imgs_list.cv and assign unique identifiers to each entry. then log in db.
-    try:
-        df = pd.read_csv(DATA_ROOT / "driver_imgs_list.csv")
-
-        with engine.connect() as conn:
-            conn.execution_options(isolation_level="AUTOCOMMIT")
-            
-    except Exception as e:
-        logger.error(f"Error type {type(e)}: {e}")
-    else:
-        logger.info("Successfully added images to database.")
-
-    conn.close()
-    logger.debug("Finished adding images to database.")
 
 # for testing purposes
 if __name__ == "__main__":
     create_db()
     create_tables()
-    #add_images()
-    delete_db()
+    #delete_db()
     
