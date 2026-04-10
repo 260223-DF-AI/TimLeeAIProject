@@ -79,7 +79,7 @@ def train():
 
         print(f"epoch {epoch} loss: {total_loss:.4f}", flush=True)
 
-    torch.save(model.state_dict(), f"{model_dir}/model.pth")
-    print("model saved")
+    # torch.save(model.state_dict(), f"{model_dir}/model.pth")
+    # print("model saved")
 
 train()
