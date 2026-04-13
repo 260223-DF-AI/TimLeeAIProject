@@ -24,7 +24,7 @@ LOG_DIR = DATA_ROOT / "model/logs"
 
 logger = logger.setup_logger(__name__, "debug")
 
-data_transforms = transforms.Compose([
+train_transforms = transforms.Compose([
     transforms.Resize((256, 256)),
     transforms.RandomHorizontalFlip(p=0.3),
     transforms.RandomVerticalFlip(p=0.3),
@@ -33,10 +33,16 @@ data_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
+eval_transforms = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
 try:
-    train_dataset = datasets.ImageFolder(root=TRAIN_DATA, transform=data_transforms)
-    val_dataset = datasets.ImageFolder(root=VAL_DATA, transform=data_transforms)
-    test_dataset = datasets.ImageFolder(root=TEST_DATA, transform=data_transforms)
+    train_dataset = datasets.ImageFolder(root=TRAIN_DATA, transform=train_transforms)
+    val_dataset = datasets.ImageFolder(root=VAL_DATA, transform=eval_transforms)
+    test_dataset = datasets.ImageFolder(root=TEST_DATA, transform=eval_transforms)
 except FileNotFoundError:
     logger.error(f"Directory structure not found. Ensure you process the data in database/process_database.py")
 
@@ -64,35 +70,6 @@ class VGG19(nn.Module):
 
     def forward(self, x):
         return self.model(x)
-
-class DriverDistractionModel(nn.Module):
-    def __init__(self):
-        super(DriverDistractionModel, self).__init__()
-        self.flatten = nn.Flatten()
-
-
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, stride=1), 
-            nn.ReLU(), 
-            nn.MaxPool2d(2), # 256x256 -> 128x128
-
-            nn.Conv2d(16, 32, kernel_size=3, stride=1), 
-            nn.ReLU(),
-            nn.MaxPool2d(2), # 128x128 -> 64x64
-        )
-
-        self.classify = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(32 * 62 * 62, 128), # 32 filters, 62x62 pixels, 128 neurons
-            nn.ReLU(),
-            nn.Dropout(p=0.3),
-            nn.Linear(128, 2) # 128 neurons, 2 outputs
-        )
-
-    def forward(self, x):
-        x = self.features(x)
-        x = self.classify(x)
-        return x
 
 class EarlyStopping:
     def __init__(self, patience = 20):
@@ -130,29 +107,12 @@ def train_loop(dataloader, model, loss_fn, optimizer, epoch, best_loss, writer, 
         
         # print(f"Batch {batch}: Loss = {loss.item():>7f}")
 
-        should_stop, improved = early_stop(loss.item())
-
-        if improved:
-            best_loss = loss
-
-            print("New best model found! Loss: ", loss.item(), " Saving...")
-
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss,
-            }, MODEL_PATH)
-
         print(f"Batch {batch}: Loss = {loss.item():>7f}")
-
-        if should_stop:
-            return model, early_stop.best_loss, True
         
     end_time = time.time()
     print(f"Epoch {epoch+1} completed: {batch+1} batches processed")
     print(f"Time taken for epoch {epoch+1}: {end_time - start_time:.2f} seconds")
-    return model, best_loss, False
+    return model, best_loss
 
 def evaluate(dataloader, model, loss_fn, writer, device):
     print("\n--- Evaluating Model ---")
@@ -168,7 +128,6 @@ def evaluate(dataloader, model, loss_fn, writer, device):
             total += len(y)
             test_loss += loss_fn(pred, y).item()
             correct += int((pred.argmax(1) == y).type(torch.float).sum().item())
-            if batch == 9: break
     
     writer.add_scalar("Loss/test", test_loss / total)
 
@@ -177,6 +136,7 @@ def evaluate(dataloader, model, loss_fn, writer, device):
     print("Correct Predictions: ", correct)
     print(f"Test Loss: {test_loss / total:.4f}")
     print(f"Evaluation: Accuracy = {int(100 * correct / total)}%" )
+    return test_loss / total
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -188,7 +148,6 @@ def main():
 
     print()
     print("--- Instantiate Model ---")
-    #model = DoggoModel()
     model = VGG19().to(device)
     best_loss = float('inf')
     
@@ -214,12 +173,27 @@ def main():
         print("Loaded best model from ", MODEL_PATH)
 
     for epoch in range(NUM_EPOCHS):
-        model, best_loss, early_stopped = train_loop(train_loader, model, criterion, optimizer, epoch, best_loss, writer, device, early_stop)
-        evaluate(test_loader, model, criterion, writer, device)
+        model, best_loss = train_loop(train_loader, model, criterion, optimizer, epoch, best_loss, writer, device, early_stop)
+        val_loss = evaluate(val_loader, model, criterion, writer, device)
 
-        if early_stopped:
-            print("Broke early")
+        # Save if this is the best model so far
+        if val_loss < best_loss:
+            best_loss = val_loss
+            print("New best model found! Saving...")
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': val_loss,
+            }, MODEL_PATH)
+        
+        should_stop, _ = early_stop(val_loss)
+        if should_stop:
+            print("Early stopping triggered")
             break
+
+    print("\n--- Final Test Evaluation ---")
+    evaluate(test_loader, model, criterion, writer, device)
 
 if __name__ == "__main__":
     main()
