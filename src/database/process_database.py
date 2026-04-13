@@ -228,13 +228,54 @@ def add_drivers():
 
     logger.debug("Finished adding drivers.")
 
+def log_http_request():
+    """Logs an http request as it is made."""
+    logger.debug("Logging http request...")
+    try:
+        engine = db_core.get_engine()
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            conn.execute(sa.text(f"INSERT INTO http_requests (time_received) VALUES (now())"))
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully logged http request.")
+    finally:
+        engine.dispose()
+    logger.debug("Finished logging http request.")
+
+def log_cv_result(http_id: int, image_file_name, cv_result):
+    """Logs cv result.
+    @param http_id: id of the http request that triggered this input
+    @param image_file_name: name of the image that was sent to the model
+    @param cv_result: result of the cv, formatted as "cA: 00.00, cB: 00.00, cC: 00.00"
+    """
+    logger.debug("Logging cv result...")
+    try:
+        engine = db_core.get_engine()
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            image_id = conn.execute(sa.text(f"SELECT image_id FROM images WHERE image_name = '{image_file_name}'")).fetchall()[0][0]
+            conn.execute(sa.text(f"INSERT INTO cv_results (http_id, image_id, cv_result) VALUES({http_id}, {image_id}, '{cv_result}')"))
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully logged cv result.")
+    finally:
+        engine.dispose()
+    logger.debug("Finished logging cv result.")
+    
 
 # for testing purposes
 if __name__ == "__main__":
-    clear_folders_to_reprocess()
-    unzip_dataset()
-    db_core.delete_db()
-    db_core.create_db()
-    db_core.create_tables()
-    add_drivers()
-    process_images()
+    #clear_folders_to_reprocess()
+    #unzip_dataset()
+    #db_core.delete_db()
+    #db_core.create_db()
+    #db_core.create_tables()
+    #add_drivers()
+    #process_images()
+    #log_http_request()
+    log_cv_result(1, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
