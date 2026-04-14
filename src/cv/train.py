@@ -22,7 +22,6 @@ lr = args.lr
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 def main():
     training_dir = os.environ["SM_CHANNEL_TRAINING"]
     model_dir = os.environ["SM_MODEL_DIR"]

@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 from src.llm.chatGPTAPI import get_report
-
+from src.aws.aws_communicator import train_model, deploy_model, predict_model
 
 frames = """
 Frame 1:
@@ -77,3 +77,18 @@ def post_root(file: UploadFile = File(...), text: str = Form()):
 
     # return the response, might need to reformat how the response is returned
     return "placeholder"
+
+@app.post("/train")
+def post_train():
+    return train_model()
+
+@app.post("/deploy")
+def post_deploy(model: str = Form()):
+    return deploy_model(model)
+
+@app.post("/predict")
+def post_predict(file: UploadFile = File(...)):
+    image_bytes = file.file.read()
+
+    return predict_model(image_bytes)
+

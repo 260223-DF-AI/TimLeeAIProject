@@ -49,7 +49,7 @@ def predict_fn(input_data, model):
     with torch.no_grad():
         outputs = model(input_data)
         _, predicted = torch.max(outputs, 1)
-    return predicted.item()
+    return outputs()
 
 
 # Output formatting
