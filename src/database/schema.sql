@@ -6,7 +6,7 @@ CREATE TYPE image_classes AS ENUM('safe_driving', 'phone_usage', 'radio', 'drink
         'reaching', 'hair_makeup', 'turned_to_passenger');
 
 CREATE TABLE drivers(
-    driver_id SERIAL PRIMARY KEY,
+    driver_id VARCHAR(4) PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(100),
     driver_age INTEGER
@@ -15,8 +15,9 @@ CREATE TABLE drivers(
 CREATE TABLE images(
     image_id SERIAL PRIMARY KEY,
     image_name VARCHAR(50) NOT NULL,
-    image_class image_classes NOT NULL,
-    driver_id INTEGER NOT NULL REFERENCES drivers(driver_id)
+    image_class VARCHAR(2) NOT NULL,
+    partition_loc VARCHAR(10) NOT NULL,
+    driver_id VARCHAR(4) NOT NULL REFERENCES drivers(driver_id)
 );
 
 
