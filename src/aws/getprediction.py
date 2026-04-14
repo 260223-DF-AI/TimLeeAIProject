@@ -6,18 +6,22 @@ from sagemaker.pytorch import PyTorchPredictor
 import os
 from dotenv import load_dotenv
 
+# get credentials
 load_dotenv()
-
 os.environ["AWS_DEFAULT_REGION"] = os.getenv("AWS_DEFAULT_REGION")
 
-endpoint_name = "pytorch-inference-2026-04-13-19-38-08-513"
+session = sagemaker.Session()
+# grab first endpoint (there will only be one for this project)
+endpoint_name = session.sagemaker_client.list_endpoints()["Endpoints"][0]["EndpointName"]
 
+# create predictor
 predictor = sagemaker.predictor.Predictor(
     endpoint_name=endpoint_name,
-    sagemaker_session=sagemaker.Session(),
+    sagemaker_session=session,
     serializer=IdentitySerializer(content_type="application/x-image"),
     deserializer=JSONDeserializer()
 )
+
 
 image_path = "src/aws/cat1.jpg"
 
