@@ -8,34 +8,35 @@ import torch
 
 load_dotenv()
 role = os.getenv("SAGEMAKER_ROLE_ARN")
-source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "cv"))
+source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 session = sagemaker.Session()
 
 
 def train_model():
     estimator = PyTorch(
-        entry_point="train.py",
+        entry_point="cv/train.py",
         source_dir=source_dir,
         role=role,
         framework_version="2.1",
         py_version="py310",
         instance_count=1,
-        instance_type="ml.m5.large",
+        instance_type="ml.g4dn.xlarge",
         hyperparameters={
             "epochs": 200, # this is the max number, it should stop well before this
             "lr": 0.001, # initial LR only
             "patience": 20, # early stopping: epochs without improvement
-            "lr_patience": 5,  # scheduler: epochs before reducing LR
+            "lr_patience": 5, # scheduler: epochs before reducing LR
             "lr_factor": 0.5, # scheduler: multiply LR by this on plateau
         },
         output_path="s3://driver-photo-bucket-554448410167-us-east-1-an/models"
     )
 
     estimator.fit({
-        "training": "s3://driver-photo-bucket-554448410167-us-east-1-an/imgs/train",
-        "validation": "s3://driver-photo-bucket-554448410167-us-east-1-an/imgs/val",
-    })
+        "training": "s3://driver-photo-bucket-554448410167-us-east-1-an/dataset/train",
+        "validation": "s3://driver-photo-bucket-554448410167-us-east-1-an/dataset/val",
+    },
+    logs=True)
     return estimator.model_data
 
 
