@@ -7,7 +7,7 @@ from sagemaker.deserializers import JSONDeserializer
 import torch
 
 load_dotenv()
-role       = os.getenv("SAGEMAKER_ROLE_ARN")
+role = os.getenv("SAGEMAKER_ROLE_ARN")
 source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "cv"))
 
 session = sagemaker.Session()
@@ -23,17 +23,17 @@ def train_model():
         instance_count=1,
         instance_type="ml.m5.large",
         hyperparameters={
-            "epochs":      200, # this is the max number, it should stop well before this
-            "lr":          0.001, # initial LR only
-            "patience":    20,    # early stopping: epochs without improvement
-            "lr_patience": 5,     # scheduler: epochs before reducing LR
-            "lr_factor":   0.5,   # scheduler: multiply LR by this on plateau
+            "epochs": 200, # this is the max number, it should stop well before this
+            "lr": 0.001, # initial LR only
+            "patience": 20, # early stopping: epochs without improvement
+            "lr_patience": 5,  # scheduler: epochs before reducing LR
+            "lr_factor": 0.5, # scheduler: multiply LR by this on plateau
         },
         output_path="s3://driver-photo-bucket-554448410167-us-east-1-an/models"
     )
 
     estimator.fit({
-        "training":   "s3://driver-photo-bucket-554448410167-us-east-1-an/imgs/train",
+        "training": "s3://driver-photo-bucket-554448410167-us-east-1-an/imgs/train",
         "validation": "s3://driver-photo-bucket-554448410167-us-east-1-an/imgs/val",
     })
     return estimator.model_data
@@ -70,12 +70,12 @@ def predict_model(payload):
     output = predictor.predict(payload)
 
     # Convert to tensor and compute probabilities
-    logits     = torch.tensor(output)
-    probs      = torch.softmax(logits, dim=1)
+    logits = torch.tensor(output)
+    probs = torch.softmax(logits, dim=1)
     confidence, pred_class = torch.max(probs, dim=1)
 
     return {
-        "class":         int(pred_class.item()),
-        "confidence":    float(confidence.item()),
+        "class": int(pred_class.item()),
+        "confidence": float(confidence.item()),
         "probabilities": probs.tolist()
     }
