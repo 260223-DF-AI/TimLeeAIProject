@@ -1,5 +1,5 @@
 import pandas as pd
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, BackgroundTasks
 from pathlib import Path
 import os
 
@@ -79,8 +79,9 @@ def post_root(file: UploadFile = File(...), text: str = Form()):
     return "placeholder"
 
 @app.post("/train")
-def post_train():
-    return train_model()
+def post_train(background_tasks: BackgroundTasks):
+    background_tasks.add_task(train_model)
+    return {"status": "training started"}
 
 @app.post("/deploy")
 def post_deploy(model: str = Form()):
