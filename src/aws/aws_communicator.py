@@ -54,6 +54,7 @@ def deploy_model(model_data):
 
 def predict_model(payload):
     
+    # this grabs the first endpoint - make sure there is only 1 or that the first endpoint is the one that you want to use
     predictor = sagemaker.predictor.Predictor(
         endpoint_name=session.sagemaker_client.list_endpoints()["Endpoints"][0]["EndpointName"],
         sagemaker_session=session,

@@ -270,12 +270,12 @@ def log_cv_result(http_id: int, image_file_name, cv_result):
 
 # for testing purposes
 if __name__ == "__main__":
-    #clear_folders_to_reprocess()
-    #unzip_dataset()
-    #db_core.delete_db()
-    #db_core.create_db()
-    #db_core.create_tables()
-    #add_drivers()
-    #process_images()
+    clear_folders_to_reprocess()
+    unzip_dataset()
+    db_core.delete_db()
+    db_core.create_db()
+    db_core.create_tables()
+    add_drivers()
+    process_images()
     #log_http_request()
-    log_cv_result(1, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
+    #log_cv_result(1, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
