@@ -43,8 +43,11 @@ def main():
     train_dataset = datasets.ImageFolder(training_dir, transform=train_transform)
     val_dataset = datasets.ImageFolder(val_dir, transform=eval_transform)
 
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+    # train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    # val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+
+    train_loader = DataLoader( train_dataset, batch_size=64, shuffle=True, num_workers=8, pin_memory=True ) 
+    val_loader = DataLoader( val_dataset, batch_size=64, shuffle=False, num_workers=8, pin_memory=True )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Running on: {device}")
@@ -95,7 +98,8 @@ def main():
                 total += len(y)
                 correct += int((pred.argmax(1) == y).sum().item())
 
-        val_loss /= total
+        val_loss /= len(val_loader)
+        #val_loss /= total
         accuracy = 100 * correct / total
         current_lr = optimizer.param_groups[0]["lr"]
 

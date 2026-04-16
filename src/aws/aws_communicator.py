@@ -46,7 +46,7 @@ def deploy_model(model_data):
         role=role,
         framework_version="2.1",
         py_version="py310",
-        entry_point="inference.py",
+        entry_point="cv/inference.py",
         source_dir=source_dir,
         sagemaker_session=session
     )

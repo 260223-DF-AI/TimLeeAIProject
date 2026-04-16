@@ -1,0 +1,402 @@
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: pytorch-training-2026-04-15-23-18-59-845
+2026-04-15 23:33:38 Starting - Starting the training job...
+2026-04-15 23:33:53 Starting - Preparing the instances for training...
+2026-04-15 23:34:20 Downloading - Downloading input data...
+2026-04-15 23:35:10 Downloading - Downloading the training image.....................
+2026-04-15 23:38:53 Training - Training image download completed. Training in progress..bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+/opt/conda/lib/python3.10/site-packages/paramiko/pkey.py:100: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from this
+module in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/opt/conda/lib/python3.10/site-packages/paramiko/transport.py:259: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from
+this module in 48.0.0.
+  "class": algorithms.TripleDES,
+2026-04-15 23:39:00,666 sagemaker-training-toolkit INFO     Imported framework sagemaker_pytorch_container.training
+2026-04-15 23:39:00,686 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)
+2026-04-15 23:39:00,696 sagemaker_pytorch_container.training INFO     Block until all host DNS lookups succeed.
+2026-04-15 23:39:00,704 sagemaker_pytorch_container.training INFO     Invoking user training script.
+2026-04-15 23:40:43,962 sagemaker-training-toolkit INFO     Installing dependencies from requirements.txt
+Collecting tensorflow (from -r requirements.txt (line 1))
+Downloading tensorflow-2.21.0-cp310-cp310-manylinux_2_27_x86_64.whl.metadata (4.4 kB)
+Collecting tensorboard (from -r requirements.txt (line 2))
+Downloading tensorboard-2.20.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting absl-py>=1.0.0 (from tensorflow->-r requirements.txt (line 1))
+Downloading absl_py-2.4.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting astunparse>=1.6.0 (from tensorflow->-r requirements.txt (line 1))
+Downloading astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
+Collecting flatbuffers>=25.9.23 (from tensorflow->-r requirements.txt (line 1))
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Collecting gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 (from tensorflow->-r requirements.txt (line 1))
+Downloading gast-0.7.0-py3-none-any.whl.metadata (1.5 kB)
+Requirement already satisfied: google_pasta>=0.1.1 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (0.2.0)
+Collecting libclang>=13.0.0 (from tensorflow->-r requirements.txt (line 1))
+Downloading libclang-18.1.1-py2.py3-none-manylinux2010_x86_64.whl.metadata (5.2 kB)
+Collecting opt_einsum>=2.3.2 (from tensorflow->-r requirements.txt (line 1))
+Downloading opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (23.1)
+Collecting protobuf<8.0.0,>=6.31.1 (from tensorflow->-r requirements.txt (line 1))
+Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Requirement already satisfied: requests<3,>=2.21.0 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (2.32.3)
+Requirement already satisfied: setuptools in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (72.1.0)
+Requirement already satisfied: six>=1.12.0 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (1.16.0)
+Collecting termcolor>=1.1.0 (from tensorflow->-r requirements.txt (line 1))
+Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Requirement already satisfied: typing_extensions>=3.6.6 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: wrapt>=1.11.0 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (1.16.0)
+Collecting grpcio<2.0,>=1.24.3 (from tensorflow->-r requirements.txt (line 1))
+Downloading grpcio-1.80.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting keras>=3.12.0 (from tensorflow->-r requirements.txt (line 1))
+Downloading keras-3.12.1-py3-none-any.whl.metadata (5.9 kB)
+Requirement already satisfied: numpy>=1.26.0 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (1.26.4)
+Requirement already satisfied: h5py<3.15.0,>=3.11.0 in /opt/conda/lib/python3.10/site-packages (from tensorflow->-r requirements.txt (line 1)) (3.11.0)
+Collecting ml_dtypes<1.0.0,>=0.5.1 (from tensorflow->-r requirements.txt (line 1))
+Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.9 kB)
+Collecting markdown>=2.6.8 (from tensorboard->-r requirements.txt (line 2))
+Downloading markdown-3.10.2-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: pillow in /opt/conda/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 2)) (10.3.0)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard->-r requirements.txt (line 2))
+Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
+Requirement already satisfied: werkzeug>=1.0.1 in /opt/conda/lib/python3.10/site-packages (from tensorboard->-r requirements.txt (line 2)) (3.0.3)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /opt/conda/lib/python3.10/site-packages (from astunparse>=1.6.0->tensorflow->-r requirements.txt (line 1)) (0.41.2)
+Requirement already satisfied: rich in /opt/conda/lib/python3.10/site-packages (from keras>=3.12.0->tensorflow->-r requirements.txt (line 1)) (13.7.1)
+Collecting namex (from keras>=3.12.0->tensorflow->-r requirements.txt (line 1))
+Downloading namex-0.1.0-py3-none-any.whl.metadata (322 bytes)
+Collecting optree (from keras>=3.12.0->tensorflow->-r requirements.txt (line 1))
+Downloading optree-0.19.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (34 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/conda/lib/python3.10/site-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 1)) (3.2.0)
+Requirement already satisfied: idna<4,>=2.5 in /opt/conda/lib/python3.10/site-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 1)) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/conda/lib/python3.10/site-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 1)) (1.26.19)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/conda/lib/python3.10/site-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 1)) (2024.7.4)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /opt/conda/lib/python3.10/site-packages (from werkzeug>=1.0.1->tensorboard->-r requirements.txt (line 2)) (2.1.5)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/conda/lib/python3.10/site-packages (from rich->keras>=3.12.0->tensorflow->-r requirements.txt (line 1)) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/conda/lib/python3.10/site-packages (from rich->keras>=3.12.0->tensorflow->-r requirements.txt (line 1)) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in /opt/conda/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.12.0->tensorflow->-r requirements.txt (line 1)) (0.1.2)
+Downloading tensorflow-2.21.0-cp310-cp310-manylinux_2_27_x86_64.whl (572.2 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 572.2/572.2 MB 1.4 MB/s eta 0:00:00
+Downloading tensorboard-2.20.0-py3-none-any.whl (5.5 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 27.8 MB/s eta 0:00:00
+Downloading absl_py-2.4.0-py3-none-any.whl (135 kB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.8/135.8 kB 1.7 MB/s eta 0:00:00
+Downloading astunparse-1.6.3-py2.py3-none-any.whl (12 kB)
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Downloading gast-0.7.0-py3-none-any.whl (22 kB)
+Downloading grpcio-1.80.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 32.5 MB/s eta 0:00:00
+Downloading keras-3.12.1-py3-none-any.whl (1.5 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 14.5 MB/s eta 0:00:00
+Downloading libclang-18.1.1-py2.py3-none-manylinux2010_x86_64.whl (24.5 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.5/24.5 MB 20.1 MB/s eta 0:00:00
+Downloading markdown-3.10.2-py3-none-any.whl (108 kB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 108.2/108.2 kB 1.1 MB/s eta 0:00:00
+Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.0 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 26.9 MB/s eta 0:00:00
+Downloading opt_einsum-3.4.0-py3-none-any.whl (71 kB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.9/71.9 kB 712.6 kB/s eta 0:00:00
+Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl (324 kB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 324.3/324.3 kB 3.6 MB/s eta 0:00:00
+Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl (6.6 MB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 29.0 MB/s eta 0:00:00
+Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+Downloading namex-0.1.0-py3-none-any.whl (5.9 kB)
+Downloading optree-0.19.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (419 kB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 419.7/419.7 kB 5.8 MB/s eta 0:00:00
+Installing collected packages: namex, libclang, flatbuffers, termcolor, tensorboard-data-server, protobuf, optree, opt_einsum, ml_dtypes, markdown, grpcio, gast, astunparse, absl-py, tensorboard, keras, tensorf
+low
+Attempting uninstall: protobuf
+Found existing installation: protobuf 3.20.3
+Uninstalling protobuf-3.20.3:
+Successfully uninstalled protobuf-3.20.3
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+sagemaker 2.228.0 requires protobuf<5.0,>=3.12, but you have protobuf 7.34.1 which is incompatible.
+sagemaker-training 4.8.1 requires protobuf<=3.20.3,>=3.9.2, but you have protobuf 7.34.1 which is incompatible.
+Successfully installed absl-py-2.4.0 astunparse-1.6.3 flatbuffers-25.12.19 gast-0.7.0 grpcio-1.80.0 keras-3.12.1 libclang-18.1.1 markdown-3.10.2 ml_dtypes-0.5.4 namex-0.1.0 opt_einsum-3.4.0 optree-0.19.0 protob
+uf-7.34.1 tensorboard-2.20.0 tensorboard-data-server-0.7.2 tensorflow-2.21.0 termcolor-3.3.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual env
+ironment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[notice] A new release of pip is available: 24.1.2 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+2026-04-15 23:41:29,276 sagemaker-training-toolkit INFO     Waiting for the process to finish and give a return code.
+2026-04-15 23:41:29,277 sagemaker-training-toolkit INFO     Done waiting for a return code. Received 0 from exiting process.
+2026-04-15 23:41:29,314 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)
+2026-04-15 23:41:29,356 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)
+2026-04-15 23:41:29,388 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)
+2026-04-15 23:41:29,399 sagemaker-training-toolkit INFO     Invoking user script
+Training Env:
+{
+    "additional_framework_parameters": {},
+    "channel_input_dirs": {
+        "training": "/opt/ml/input/data/training",
+        "validation": "/opt/ml/input/data/validation"
+    },
+    "current_host": "algo-1",
+    "current_instance_group": "homogeneousCluster",
+    "current_instance_group_hosts": [
+        "algo-1"
+    ],
+    "current_instance_type": "ml.g4dn.xlarge",
+    "distribution_hosts": [],
+    "distribution_instance_groups": [],
+    "framework_module": "sagemaker_pytorch_container.training:main",
+    "hosts": [
+        "algo-1"
+    ],
+    "hyperparameters": {
+        "epochs": 200,
+        "lr": 0.001,
+        "lr_factor": 0.5,
+        "lr_patience": 5,
+        "patience": 20
+    },
+    "input_config_dir": "/opt/ml/input/config",
+    "input_data_config": {
+        "training": {
+            "TrainingInputMode": "File",
+            "S3DistributionType": "FullyReplicated",
+            "RecordWrapperType": "None"
+        },
+        "validation": {
+            "TrainingInputMode": "File",
+            "S3DistributionType": "FullyReplicated",
+            "RecordWrapperType": "None"
+        }
+    },
+    "input_dir": "/opt/ml/input",
+    "instance_groups": [
+        "homogeneousCluster"
+    ],
+    "instance_groups_dict": {
+        "homogeneousCluster": {
+            "instance_group_name": "homogeneousCluster",
+            "instance_type": "ml.g4dn.xlarge",
+            "hosts": [
+                "algo-1"
+            ]
+        }
+    },
+    "is_hetero": false,
+    "is_master": true,
+    "is_modelparallel_enabled": null,
+    "is_smddpmprun_installed": false,
+    "is_smddprun_installed": true,
+    "job_name": "pytorch-training-2026-04-15-23-18-59-845",
+    "log_level": 20,
+    "master_hostname": "algo-1",
+    "model_dir": "/opt/ml/model",
+    "module_dir": "s3://driver-photo-bucket-554448410167-us-east-1-an/pytorch-training-2026-04-15-23-18-59-845/source/sourcedir.tar.gz",
+    "module_name": "cv/train",
+    "network_interface_name": "eth0",
+    "num_cpus": 4,
+    "num_gpus": 1,
+    "num_neurons": 0,
+    "output_data_dir": "/opt/ml/output/data",
+    "output_dir": "/opt/ml/output",
+    "output_intermediate_dir": "/opt/ml/output/intermediate",
+    "resource_config": {
+        "current_host": "algo-1",
+        "current_instance_type": "ml.g4dn.xlarge",
+        "current_group_name": "homogeneousCluster",
+        "hosts": [
+            "algo-1"
+        ],
+        "instance_groups": [
+            {
+                "instance_group_name": "homogeneousCluster",
+                "instance_type": "ml.g4dn.xlarge",
+                "hosts": [
+                    "algo-1"
+                ]
+            }
+        ],
+        "network_interface_name": "eth0",
+        "topology": null
+    },
+    "user_entry_point": "cv/train.py"
+}
+Environment variables:
+SM_HOSTS=["algo-1"]
+SM_NETWORK_INTERFACE_NAME=eth0
+SM_HPS={"epochs":200,"lr":0.001,"lr_factor":0.5,"lr_patience":5,"patience":20}
+SM_USER_ENTRY_POINT=cv/train.py
+SM_FRAMEWORK_PARAMS={}
+SM_RESOURCE_CONFIG={"current_group_name":"homogeneousCluster","current_host":"algo-1","current_instance_type":"ml.g4dn.xlarge","hosts":["algo-1"],"instance_groups":[{"hosts":["algo-1"],"instance_group_name":"ho
+mogeneousCluster","instance_type":"ml.g4dn.xlarge"}],"network_interface_name":"eth0","topology":null}
+SM_INPUT_DATA_CONFIG={"training":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"},"validation":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","T
+rainingInputMode":"File"}}
+SM_OUTPUT_DATA_DIR=/opt/ml/output/data
+SM_CHANNELS=["training","validation"]
+SM_CURRENT_HOST=algo-1
+SM_CURRENT_INSTANCE_TYPE=ml.g4dn.xlarge
+SM_CURRENT_INSTANCE_GROUP=homogeneousCluster
+SM_CURRENT_INSTANCE_GROUP_HOSTS=["algo-1"]
+SM_INSTANCE_GROUPS=["homogeneousCluster"]
+SM_INSTANCE_GROUPS_DICT={"homogeneousCluster":{"hosts":["algo-1"],"instance_group_name":"homogeneousCluster","instance_type":"ml.g4dn.xlarge"}}
+SM_DISTRIBUTION_INSTANCE_GROUPS=[]
+SM_IS_HETERO=false
+SM_MODULE_NAME=cv/train
+SM_LOG_LEVEL=20
+SM_FRAMEWORK_MODULE=sagemaker_pytorch_container.training:main
+SM_INPUT_DIR=/opt/ml/input
+SM_INPUT_CONFIG_DIR=/opt/ml/input/config
+SM_OUTPUT_DIR=/opt/ml/output
+SM_NUM_CPUS=4
+SM_NUM_GPUS=1
+SM_NUM_NEURONS=0
+SM_MODEL_DIR=/opt/ml/model
+SM_MODULE_DIR=s3://driver-photo-bucket-554448410167-us-east-1-an/pytorch-training-2026-04-15-23-18-59-845/source/sourcedir.tar.gz
+SM_TRAINING_ENV={"additional_framework_parameters":{},"channel_input_dirs":{"training":"/opt/ml/input/data/training","validation":"/opt/ml/input/data/validation"},"current_host":"algo-1","current_instance_group
+":"homogeneousCluster","current_instance_group_hosts":["algo-1"],"current_instance_type":"ml.g4dn.xlarge","distribution_hosts":[],"distribution_instance_groups":[],"framework_module":"sagemaker_pytorch_containe
+r.training:main","hosts":["algo-1"],"hyperparameters":{"epochs":200,"lr":0.001,"lr_factor":0.5,"lr_patience":5,"patience":20},"input_config_dir":"/opt/ml/input/config","input_data_config":{"training":{"RecordWr
+apperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"},"validation":{"RecordWrapperType":"None","S3DistributionType":"FullyReplicated","TrainingInputMode":"File"}},"input_dir":"/op
+t/ml/input","instance_groups":["homogeneousCluster"],"instance_groups_dict":{"homogeneousCluster":{"hosts":["algo-1"],"instance_group_name":"homogeneousCluster","instance_type":"ml.g4dn.xlarge"}},"is_hetero":fa
+lse,"is_master":true,"is_modelparallel_enabled":null,"is_smddpmprun_installed":false,"is_smddprun_installed":true,"job_name":"pytorch-training-2026-04-15-23-18-59-845","log_level":20,"master_hostname":"algo-1",
+"model_dir":"/opt/ml/model","module_dir":"s3://driver-photo-bucket-554448410167-us-east-1-an/pytorch-training-2026-04-15-23-18-59-845/source/sourcedir.tar.gz","module_name":"cv/train","network_interface_name":"
+eth0","num_cpus":4,"num_gpus":1,"num_neurons":0,"output_data_dir":"/opt/ml/output/data","output_dir":"/opt/ml/output","output_intermediate_dir":"/opt/ml/output/intermediate","resource_config":{"current_group_na
+me":"homogeneousCluster","current_host":"algo-1","current_instance_type":"ml.g4dn.xlarge","hosts":["algo-1"],"instance_groups":[{"hosts":["algo-1"],"instance_group_name":"homogeneousCluster","instance_type":"ml
+.g4dn.xlarge"}],"network_interface_name":"eth0","topology":null},"user_entry_point":"cv/train.py"}
+SM_USER_ARGS=["--epochs","200","--lr","0.001","--lr_factor","0.5","--lr_patience","5","--patience","20"]
+SM_OUTPUT_INTERMEDIATE_DIR=/opt/ml/output/intermediate
+SM_CHANNEL_TRAINING=/opt/ml/input/data/training
+SM_CHANNEL_VALIDATION=/opt/ml/input/data/validation
+SM_HP_EPOCHS=200
+SM_HP_LR=0.001
+SM_HP_LR_FACTOR=0.5
+SM_HP_LR_PATIENCE=5
+SM_HP_PATIENCE=20
+PYTHONPATH=/opt/ml/code:/opt/conda/bin:/opt/conda/lib/python310.zip:/opt/conda/lib/python3.10:/opt/conda/lib/python3.10/lib-dynload:/opt/conda/lib/python3.10/site-packages
+Invoking script with the following command:
+/opt/conda/bin/python3.10 cv/train.py --epochs 200 --lr 0.001 --lr_factor 0.5 --lr_patience 5 --patience 20
+2026-04-15 23:41:29,441 sagemaker-training-toolkit INFO     Exceptions not imported for SageMaker Debugger as it is not installed.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1776296490.056752      23 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To
+turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1776296490.126928      23 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1776296492.017144      23 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To
+turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-04-15 23:41:34,112 matplotlib.font_manager INFO     generated new fontManager
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1776296499.389254      90 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To
+turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1776296499.444769      90 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1776296500.949864      90 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To
+turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which
+ is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/fre
+eze if necessary.
+  warnings.warn(_create_warning_msg(
+Running on: cuda
+Downloading: "https://download.pytorch.org/models/vgg19-dcbb9e9d.pth" to /root/.cache/torch/hub/checkpoints/vgg19-dcbb9e9d.pth
+0%|          | 0.00/548M [00:00<?, ?B/s]
+3%|▎         | 18.4M/548M [00:00<00:02, 192MB/s]
+7%|▋         | 37.9M/548M [00:00<00:02, 200MB/s]
+10%|█         | 57.4M/548M [00:00<00:02, 202MB/s]
+14%|█▍        | 77.2M/548M [00:00<00:02, 204MB/s]
+18%|█▊        | 97.1M/548M [00:00<00:02, 206MB/s]
+21%|██▏       | 117M/548M [00:00<00:02, 206MB/s]
+25%|██▍       | 137M/548M [00:00<00:02, 206MB/s]
+29%|██▊       | 156M/548M [00:00<00:01, 206MB/s]
+32%|███▏      | 176M/548M [00:00<00:01, 207MB/s]
+36%|███▌      | 196M/548M [00:01<00:01, 206MB/s]
+39%|███▉      | 215M/548M [00:01<00:01, 203MB/s]
+43%|████▎     | 235M/548M [00:01<00:01, 203MB/s]
+46%|████▋     | 254M/548M [00:01<00:01, 203MB/s]
+50%|█████     | 275M/548M [00:01<00:01, 206MB/s]
+54%|█████▍    | 296M/548M [00:01<00:01, 212MB/s]
+58%|█████▊    | 318M/548M [00:01<00:01, 217MB/s]
+62%|██████▏   | 340M/548M [00:01<00:00, 220MB/s]
+66%|██████▌   | 361M/548M [00:01<00:00, 223MB/s]
+70%|██████▉   | 383M/548M [00:01<00:00, 225MB/s]
+74%|███████▍  | 405M/548M [00:02<00:00, 226MB/s]
+78%|███████▊  | 427M/548M [00:02<00:00, 227MB/s]
+82%|████████▏ | 449M/548M [00:02<00:00, 227MB/s]
+86%|████████▌ | 470M/548M [00:02<00:00, 227MB/s]
+90%|████████▉ | 492M/548M [00:02<00:00, 228MB/s]
+94%|█████████▍| 514M/548M [00:02<00:00, 228MB/s]
+98%|█████████▊| 536M/548M [00:02<00:00, 228MB/s]
+100%|██████████| 548M/548M [00:02<00:00, 216MB/s]
+epoch   0 | train loss: 414.0667 | val loss: 1.372147 | val acc: 56.8% | lr: 0.001000
+New best model — saving checkpoint
+epoch   1 | train loss: 381.3509 | val loss: 1.168796 | val acc: 54.3% | lr: 0.001000
+New best model — saving checkpoint
+epoch   2 | train loss: 372.1729 | val loss: 1.110719 | val acc: 61.8% | lr: 0.001000
+New best model — saving checkpoint
+epoch   3 | train loss: 369.9834 | val loss: 1.123775 | val acc: 55.1% | lr: 0.001000
+epoch   4 | train loss: 361.1342 | val loss: 1.053143 | val acc: 59.3% | lr: 0.001000
+New best model — saving checkpoint
+epoch   5 | train loss: 365.4257 | val loss: 1.035566 | val acc: 62.5% | lr: 0.001000
+New best model — saving checkpoint
+epoch   6 | train loss: 367.9893 | val loss: 1.075029 | val acc: 59.8% | lr: 0.001000
+epoch   7 | train loss: 367.8645 | val loss: 1.012297 | val acc: 61.6% | lr: 0.001000
+New best model — saving checkpoint
+epoch   8 | train loss: 364.5098 | val loss: 1.129641 | val acc: 54.8% | lr: 0.001000
+epoch   9 | train loss: 368.3586 | val loss: 0.990877 | val acc: 66.5% | lr: 0.001000
+New best model — saving checkpoint
+epoch  10 | train loss: 363.0026 | val loss: 1.056898 | val acc: 63.2% | lr: 0.001000
+epoch  11 | train loss: 367.0855 | val loss: 0.950415 | val acc: 67.5% | lr: 0.001000
+New best model — saving checkpoint
+epoch  12 | train loss: 366.9337 | val loss: 0.955253 | val acc: 66.3% | lr: 0.001000
+epoch  13 | train loss: 365.4100 | val loss: 0.977459 | val acc: 63.8% | lr: 0.001000
+epoch  14 | train loss: 364.3998 | val loss: 1.002165 | val acc: 63.5% | lr: 0.001000
+epoch  15 | train loss: 370.3667 | val loss: 1.057469 | val acc: 61.1% | lr: 0.001000
+epoch  16 | train loss: 365.8678 | val loss: 1.030219 | val acc: 66.5% | lr: 0.001000
+epoch  17 | train loss: 360.6196 | val loss: 0.989967 | val acc: 64.5% | lr: 0.001000
+Epoch 00018: reducing learning rate of group 0 to 5.0000e-04.
+epoch  18 | train loss: 352.5960 | val loss: 0.934051 | val acc: 67.4% | lr: 0.000500
+New best model — saving checkpoint
+epoch  19 | train loss: 352.6992 | val loss: 0.979222 | val acc: 66.3% | lr: 0.000500
+epoch  20 | train loss: 345.1992 | val loss: 0.953955 | val acc: 65.4% | lr: 0.000500
+epoch  21 | train loss: 344.6233 | val loss: 0.972735 | val acc: 65.9% | lr: 0.000500
+epoch  22 | train loss: 343.8032 | val loss: 0.967928 | val acc: 67.2% | lr: 0.000500
+epoch  23 | train loss: 346.3090 | val loss: 0.958298 | val acc: 69.5% | lr: 0.000500
+epoch  24 | train loss: 343.4605 | val loss: 0.975030 | val acc: 69.3% | lr: 0.000500
+Epoch 00025: reducing learning rate of group 0 to 2.5000e-04.
+epoch  25 | train loss: 339.6660 | val loss: 0.933138 | val acc: 68.5% | lr: 0.000250
+New best model — saving checkpoint
+epoch  26 | train loss: 335.2809 | val loss: 0.962693 | val acc: 69.0% | lr: 0.000250
+epoch  27 | train loss: 338.0053 | val loss: 0.942727 | val acc: 68.9% | lr: 0.000250
+epoch  28 | train loss: 335.2772 | val loss: 0.937513 | val acc: 70.9% | lr: 0.000250
+epoch  29 | train loss: 331.7200 | val loss: 0.930981 | val acc: 70.3% | lr: 0.000250
+New best model — saving checkpoint
+epoch  30 | train loss: 329.7655 | val loss: 0.941803 | val acc: 69.0% | lr: 0.000250
+epoch  31 | train loss: 332.0749 | val loss: 0.950295 | val acc: 66.3% | lr: 0.000250
+epoch  32 | train loss: 332.9213 | val loss: 0.940562 | val acc: 68.2% | lr: 0.000250
+epoch  33 | train loss: 330.9276 | val loss: 0.944066 | val acc: 69.6% | lr: 0.000250
+epoch  34 | train loss: 332.8107 | val loss: 0.930776 | val acc: 68.7% | lr: 0.000250
+New best model — saving checkpoint
+epoch  35 | train loss: 331.5956 | val loss: 0.956535 | val acc: 65.6% | lr: 0.000250
+epoch  36 | train loss: 330.9821 | val loss: 0.934139 | val acc: 68.6% | lr: 0.000250
+epoch  37 | train loss: 332.1464 | val loss: 0.931851 | val acc: 67.2% | lr: 0.000250
+epoch  38 | train loss: 330.7102 | val loss: 0.946069 | val acc: 67.2% | lr: 0.000250
+epoch  39 | train loss: 330.4800 | val loss: 0.942760 | val acc: 71.3% | lr: 0.000250
+epoch  40 | train loss: 329.7464 | val loss: 0.956544 | val acc: 67.2% | lr: 0.000250
+Epoch 00041: reducing learning rate of group 0 to 1.2500e-04.
+epoch  41 | train loss: 327.7439 | val loss: 0.954298 | val acc: 67.9% | lr: 0.000125
+epoch  42 | train loss: 326.0686 | val loss: 0.938647 | val acc: 68.5% | lr: 0.000125
+epoch  43 | train loss: 325.1577 | val loss: 0.964298 | val acc: 67.0% | lr: 0.000125
+epoch  44 | train loss: 324.5038 | val loss: 0.945184 | val acc: 67.8% | lr: 0.000125
+epoch  45 | train loss: 323.7619 | val loss: 0.948375 | val acc: 69.0% | lr: 0.000125
+epoch  46 | train loss: 329.4996 | val loss: 0.948606 | val acc: 70.4% | lr: 0.000125
+Epoch 00047: reducing learning rate of group 0 to 6.2500e-05.
+epoch  47 | train loss: 327.9124 | val loss: 0.943039 | val acc: 70.2% | lr: 0.000063
+epoch  48 | train loss: 322.9788 | val loss: 0.934439 | val acc: 68.2% | lr: 0.000063
+epoch  49 | train loss: 323.9720 | val loss: 0.946429 | val acc: 68.8% | lr: 0.000063
+epoch  50 | train loss: 323.7278 | val loss: 0.948419 | val acc: 65.7% | lr: 0.000063
+epoch  51 | train loss: 322.5408 | val loss: 0.938625 | val acc: 68.7% | lr: 0.000063
+epoch  52 | train loss: 323.9613 | val loss: 0.943331 | val acc: 68.6% | lr: 0.000063
+Epoch 00053: reducing learning rate of group 0 to 3.1250e-05.
+epoch  53 | train loss: 326.7638 | val loss: 0.945210 | val acc: 67.8% | lr: 0.000031
+epoch  54 | train loss: 324.2094 | val loss: 0.940634 | val acc: 69.6% | lr: 0.000031
+Early stopping triggered
+Training complete.
+2026-04-16 01:45:03,185 sagemaker-training-toolkit INFO     Waiting for the process to finish and give a return code.
+2026-04-16 01:45:03,185 sagemaker-training-toolkit INFO     Done waiting for a return code. Received 0 from exiting process.
+2026-04-16 01:45:03,186 sagemaker-training-toolkit INFO     Reporting training SUCCESS
+
+2026-04-16 01:45:24 Uploading - Uploading generated training model
+2026-04-16 01:45:42 Completed - Training job completed
+Training seconds: 7882
+Billable seconds: 7882
