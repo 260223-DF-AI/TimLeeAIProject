@@ -23,7 +23,8 @@ CREATE TABLE images(
 
 CREATE TABLE http_requests(
     http_id SERIAL PRIMARY KEY,
-    time_received TIMESTAMP NOT NULL
+    time_received TIMESTAMP NOT NULL,
+    request_name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE cv_results(
@@ -38,8 +39,8 @@ CREATE TYPE prompt_types AS ENUM('image', 'summary', 'other');
 CREATE TABLE llm(
     llm_id SERIAL PRIMARY KEY,
     http_id INTEGER NOT NULL REFERENCES http_requests(http_id),
-    time_sent TIMESTAMP NOT NULL,
-    time_received TIMESTAMP NOT NULL,
+    time_sent TIMESTAMP,
+    time_received TIMESTAMP,
     prompt_type prompt_types NOT NULL,
     prompt_body TEXT NOT NULL,
     response_body TEXT NOT NULL
