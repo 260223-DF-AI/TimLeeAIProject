@@ -7,11 +7,16 @@ from PIL import Image
 from model import VGG19
 
 def model_fn(model_dir):
+    print("Loading model...")
     model = VGG19()
     model_path = os.path.join(model_dir, "model.pth")
     print("Loading model from:", model_path)
-    state_dict = torch.load(model_path, map_location="cpu")
+    # state_dict = torch.load(model_path, map_location="cpu")
+    # model.load_state_dict(state_dict)
+
+    state_dict = torch.load(model_path, map_location="cpu", weights_only=True)
     model.load_state_dict(state_dict)
+
     model.eval()
     print("Model ready")
     return model

@@ -9,7 +9,7 @@ from torchvision import datasets, transforms
 from model import VGG19, EarlyStopping
 import argparse
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--epochs", type=int, default=30)
@@ -68,7 +68,7 @@ def main():
     )
 
     early_stop = EarlyStopping(patience=args.patience)
-    os.makedirs(model_dir, exist_ok=True)
+    #os.makedirs(model_dir, exist_ok=True)
 
     for epoch in range(args.epochs):
 
@@ -117,8 +117,9 @@ def main():
         should_stop, improved = early_stop(val_loss)
         if improved:
             print("New best model — saving checkpoint")
+            os.makedirs(model_dir, exist_ok=True)
             torch.save(model.state_dict(), os.path.join(model_dir, "model.pth"))
-
+        
         if should_stop:
             print("Early stopping triggered")
             break
