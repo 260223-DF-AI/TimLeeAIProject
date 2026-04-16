@@ -25,7 +25,7 @@ def train_model():
         hyperparameters={
             "epochs": 200, # this is the max number, it should stop well before this
             "lr": 0.001, # initial LR only
-            "patience": 20, # early stopping: epochs without improvement
+            "patience": 7, # early stopping: epochs without improvement
             "lr_patience": 5, # scheduler: epochs before reducing LR
             "lr_factor": 0.5, # scheduler: multiply LR by this on plateau
         },
@@ -71,12 +71,4 @@ def predict_model(payload):
     output = predictor.predict(payload)
 
     # Convert to tensor and compute probabilities
-    logits = torch.tensor(output)
-    probs = torch.softmax(logits, dim=1)
-    confidence, pred_class = torch.max(probs, dim=1)
-
-    return {
-        "class": int(pred_class.item()),
-        "confidence": float(confidence.item()),
-        "probabilities": probs.tolist()
-    }
+    return output

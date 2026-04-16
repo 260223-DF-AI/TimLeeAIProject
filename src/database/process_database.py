@@ -294,13 +294,13 @@ def log_llm_request(http_id: int, prompt_type: str, prompt_body: str, response_b
 
 # for testing purposes
 if __name__ == "__main__":
-    #clear_folders_to_reprocess()
-    #unzip_dataset()
-    #db_core.delete_db()
-    #db_core.create_db()
-    #db_core.create_tables()
-    #add_drivers()
-    #process_images()
-    http_id = log_http_request("/test")
-    log_cv_result(http_id, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
-    log_llm_request(http_id, "other", "prompt", "response")
+    clear_folders_to_reprocess()
+    unzip_dataset()
+    db_core.delete_db()
+    db_core.create_db()
+    db_core.create_tables()
+    add_drivers()
+    process_images()
+    #http_id = log_http_request("/test")
+    #log_cv_result(http_id, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
+    #log_llm_request(http_id, "other", "prompt", "response")
