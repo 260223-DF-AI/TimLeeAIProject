@@ -8,14 +8,14 @@ import torch
 
 load_dotenv()
 role = os.getenv("SAGEMAKER_ROLE_ARN")
-source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
+#source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+source_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "cv"))
 session = sagemaker.Session()
 
 
 def train_model():
     estimator = PyTorch(
-        entry_point="cv/train.py",
+        entry_point="train.py",
         source_dir=source_dir,
         role=role,
         framework_version="2.1",
@@ -23,9 +23,9 @@ def train_model():
         instance_count=1,
         instance_type="ml.g4dn.xlarge",
         hyperparameters={
-            "epochs": 200, # this is the max number, it should stop well before this
+            "epochs": 3, # this is the max number, it should stop well before this
             "lr": 0.001, # initial LR only
-            "patience": 20, # early stopping: epochs without improvement
+            "patience": 7, # early stopping: epochs without improvement
             "lr_patience": 5, # scheduler: epochs before reducing LR
             "lr_factor": 0.5, # scheduler: multiply LR by this on plateau
         },
@@ -53,7 +53,8 @@ def deploy_model(model_data):
 
     predictor = pytorch_model.deploy(
         initial_instance_count=1,
-        instance_type="ml.m5.large",
+        instance_type="ml.g4dn.xlarge",
+        #instance_type="ml.m5.large",
         serializer=IdentitySerializer(content_type="application/x-image"),
         deserializer=JSONDeserializer()
     )
@@ -71,12 +72,4 @@ def predict_model(payload):
     output = predictor.predict(payload)
 
     # Convert to tensor and compute probabilities
-    logits = torch.tensor(output)
-    probs = torch.softmax(logits, dim=1)
-    confidence, pred_class = torch.max(probs, dim=1)
-
-    return {
-        "class": int(pred_class.item()),
-        "confidence": float(confidence.item()),
-        "probabilities": probs.tolist()
-    }
+    return output

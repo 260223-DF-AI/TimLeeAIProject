@@ -228,7 +228,7 @@ def add_drivers():
 
     logger.debug("Finished adding drivers.")
 
-def log_http_request():
+def log_http_request(request_name: str):
     """Logs an http request as it is made."""
     logger.debug("Logging http request...")
     try:
@@ -236,11 +236,14 @@ def log_http_request():
 
         with engine.connect() as conn:
             conn.execution_options(isolation_level="AUTOCOMMIT")
-            conn.execute(sa.text(f"INSERT INTO http_requests (time_received) VALUES (now())"))
+            conn.execute(sa.text(f"INSERT INTO http_requests (time_received, request_name) VALUES (now(), '{request_name}')"))
+            id = conn.execute(sa.text(f"SELECT http_id FROM http_requests ORDER BY http_id DESC LIMIT 1")).fetchall()[0][0]
     except Exception as e:
         logger.error(f"Error type {type(e)}: {e}")
     else:
         logger.info("Successfully logged http request.")
+        # return http_id of the entry that was just logged
+        return id
     finally:
         engine.dispose()
     logger.debug("Finished logging http request.")
@@ -266,7 +269,28 @@ def log_cv_result(http_id: int, image_file_name, cv_result):
     finally:
         engine.dispose()
     logger.debug("Finished logging cv result.")
+
+def log_llm_request(http_id: int, prompt_type: str, prompt_body: str, response_body: str):
+    """Logs the input/output of the LLM.
     
+    prompt_type should be "image", "summary", or "other"."""
+
+    logger.debug("Logging llm request...")
+
+    try:
+        engine = db_core.get_engine()
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            conn.execute(sa.text(f"INSERT INTO llm(http_id, prompt_type, prompt_body, response_body) VALUES({http_id}, '{prompt_type}', '{prompt_body}', '{response_body}')"))
+    except Exception as e:
+        logger.error(f"Error type {type(e)}: {e}")
+    else:
+        logger.info("Successfully logged llm request.")
+    finally:
+        engine.dispose()
+    logger.debug("Finished logging llm request.")
+    pass
 
 # for testing purposes
 if __name__ == "__main__":
@@ -277,5 +301,6 @@ if __name__ == "__main__":
     db_core.create_tables()
     add_drivers()
     process_images()
-    #log_http_request()
-    #log_cv_result(1, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
+    #http_id = log_http_request("/test")
+    #log_cv_result(http_id, "img_44733.jpg", "c0: 00.00, c1: 00.00, c2: 00.00")
+    #log_llm_request(http_id, "other", "prompt", "response")

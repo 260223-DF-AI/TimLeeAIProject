@@ -9,7 +9,7 @@ from torchvision import datasets, transforms
 from model import VGG19, EarlyStopping
 import argparse
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--epochs", type=int, default=30)
@@ -26,7 +26,7 @@ def main():
     model_dir = os.environ["SM_MODEL_DIR"]
 
     train_transform = transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize((224, 224)),
         transforms.RandomHorizontalFlip(p=0.3),
         transforms.RandomVerticalFlip(p=0.3),
         transforms.RandomRotation(45),
@@ -35,7 +35,7 @@ def main():
     ])
 
     eval_transform = transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
@@ -43,11 +43,8 @@ def main():
     train_dataset = datasets.ImageFolder(training_dir, transform=train_transform)
     val_dataset = datasets.ImageFolder(val_dir, transform=eval_transform)
 
-    # train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-    # val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
-
-    train_loader = DataLoader( train_dataset, batch_size=64, shuffle=True, num_workers=8, pin_memory=True ) 
-    val_loader = DataLoader( val_dataset, batch_size=64, shuffle=False, num_workers=8, pin_memory=True )
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=4, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False, num_workers=4, pin_memory=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Running on: {device}")
@@ -55,11 +52,11 @@ def main():
     model = VGG19().to(device)
     loss_fn = nn.CrossEntropyLoss()
 
-    # Only optimize the unfrozen classifier head
-    optimizer = optim.Adam(
-        filter(lambda p: p.requires_grad, model.parameters()),
-        lr=args.lr
-    )
+    optimizer = optim.Adam([
+        {"params": [p for n,p in model.named_parameters() 
+                    if "features" in n and p.requires_grad], "lr": args.lr * 0.1},
+        {"params": model.model.classifier.parameters(), "lr": args.lr}
+    ])
 
     # Reduce LR when val loss plateaus
     scheduler = ReduceLROnPlateau(
@@ -71,7 +68,7 @@ def main():
     )
 
     early_stop = EarlyStopping(patience=args.patience)
-    os.makedirs(model_dir, exist_ok=True)
+    #os.makedirs(model_dir, exist_ok=True)
 
     for epoch in range(args.epochs):
 
@@ -87,6 +84,8 @@ def main():
             optimizer.step()
             train_loss += loss.item()
 
+        train_loss /= len(train_loader)
+
         # ── Validation ────────────────────────────────────────────
         model.eval()
         val_loss, correct, total = 0.0, 0, 0
@@ -98,8 +97,10 @@ def main():
                 total += len(y)
                 correct += int((pred.argmax(1) == y).sum().item())
 
-        val_loss /= len(val_loader)
+
         #val_loss /= total
+        val_loss /= len(val_loader)
+
         accuracy = 100 * correct / total
         current_lr = optimizer.param_groups[0]["lr"]
 
@@ -118,8 +119,9 @@ def main():
         should_stop, improved = early_stop(val_loss)
         if improved:
             print("New best model — saving checkpoint")
+            os.makedirs(model_dir, exist_ok=True)
             torch.save(model.state_dict(), os.path.join(model_dir, "model.pth"))
-
+        
         if should_stop:
             print("Early stopping triggered")
             break

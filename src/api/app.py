@@ -5,6 +5,7 @@ import os
 
 from src.llm.chatGPTAPI import get_report
 from src.aws.aws_communicator import train_model, deploy_model, predict_model
+from src.database import process_database, database_core
 
 frames = """
 Frame 1:
@@ -62,7 +63,7 @@ app = FastAPI()
 
 @app.post("/")
 def post_root(file: UploadFile = File(...), text: str = Form()):
-
+    http_id = process_database.log_http_request("/")
     # will model need to be created here, or will it already exist on sagemaker??
     #model = Model()
     
@@ -80,16 +81,18 @@ def post_root(file: UploadFile = File(...), text: str = Form()):
 
 @app.post("/train")
 def post_train(background_tasks: BackgroundTasks):
+    http_id = process_database.log_http_request("/train")
     background_tasks.add_task(train_model)
     return {"status": "training started"}
 
 @app.post("/deploy")
 def post_deploy(model: str = Form()):
+    http_id = process_database.log_http_request("/deploy")
     return deploy_model(model)
 
 @app.post("/predict")
 def post_predict(file: UploadFile = File(...)):
+    http_id = process_database.log_http_request("/predict")
     image_bytes = file.file.read()
 
     return predict_model(image_bytes)
-
