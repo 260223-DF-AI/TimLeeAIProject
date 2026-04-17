@@ -97,8 +97,10 @@ def main():
                 total += len(y)
                 correct += int((pred.argmax(1) == y).sum().item())
 
+
         #val_loss /= total
         val_loss /= len(val_loader)
+
         accuracy = 100 * correct / total
         current_lr = optimizer.param_groups[0]["lr"]
 
