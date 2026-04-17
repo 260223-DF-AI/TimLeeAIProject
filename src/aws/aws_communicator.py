@@ -73,3 +73,12 @@ def predict_model(payload):
 
     # Convert to tensor and compute probabilities
     return output
+
+def delete_endpoint():
+    endpoint_name = session.sagemaker_client.list_endpoints()["Endpoints"][0]["EndpointName"]
+
+    # delete endpoint
+    session.sagemaker_client.delete_endpoint(EndpointName=endpoint_name)
+
+    print(f"Deleted endpoint: {endpoint_name}")
+    return "Deleted endpoint"
