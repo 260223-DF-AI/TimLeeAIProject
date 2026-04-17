@@ -12,7 +12,7 @@ The script here will do the unzipping/processing for you so just drop the zip fi
 You will also need to add a .env file with your local postgres information:
 1. Ensure you have a .env file in src
 2. Write the connection string to it, replace password with your password:
-CS = "postgresql://postgres:PASSWORD@localhost:5432/driver_image_classification"
+CS = postgresql://postgres:PASSWORD@localhost:5432
 
 After following both of these sets of instructions, run process_database.py once to have everything
 set up for model training. It will take several minutes.

@@ -31,6 +31,8 @@ app = FastAPI()
 
 @app.post("/analyze")
 def post_root(directory: str):
+    http_id = process_database.log_http_request("/analyze")
+
     if not os.path.isdir(directory):
         return {"error": "Invalid directory"}
 
@@ -47,6 +49,8 @@ def post_root(directory: str):
             image_bytes = f.read()
 
         prediction = predict_model(image_bytes)
+
+        process_database.log_cv_result(http_id, filename, prediction)
         results.append(prediction)
 
     # Generate report
@@ -65,6 +69,8 @@ def post_root(directory: str):
     print("writing report")
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(report)
+
+    process_database.log_llm_request(http_id, "summary", "default_prompt", report)
 
     return {
         "message": "Report generated",
@@ -85,14 +91,21 @@ def post_deploy(model: str = Form()):
 @app.post("/predict")
 def post_predict(file: UploadFile = File(...)):
     http_id = process_database.log_http_request("/predict")
+
     image_bytes = file.file.read()
 
-    return predict_model(image_bytes)
+    result = predict_model(image_bytes)
+
+    process_database.log_cv_result(http_id, file.filename, result)
+
+    return result
 
 @app.delete("/close_endpoint")
 def delete_close_endpoint():
-    #http_id = process_database.log_http_request("/closeEndpoint")
+    http_id = process_database.log_http_request("/closeEndpoint")
     return delete_endpoint()
+
 @app.post("/bug_example")
 def post_bug_example(files: List[UploadFile] = File(...)):
+    http_id = process_database.log_http_request("/bug_example")
     return "glitch example"
