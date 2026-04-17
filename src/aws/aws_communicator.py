@@ -23,7 +23,7 @@ def train_model():
         instance_count=1,
         instance_type="ml.g4dn.xlarge",
         hyperparameters={
-            "epochs": 3, # this is the max number, it should stop well before this
+            "epochs": 30, # this is the max number, it should stop well before this
             "lr": 0.001, # initial LR only
             "patience": 7, # early stopping: epochs without improvement
             "lr_patience": 5, # scheduler: epochs before reducing LR
